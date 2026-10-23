@@ -34,8 +34,8 @@ extern "C" {
 
 ofxHap::Demuxer::Demuxer(const std::string& movie, PacketReceiver& receiver) :
 _lastRead(AV_NOPTS_VALUE), _lastSeek(AV_NOPTS_VALUE),
-_thread(&ofxHap::Demuxer::threadMain, this, movie, std::ref(receiver)),
-_finish(false), _active(false)
+_finish(false), _active(false),
+_thread(&ofxHap::Demuxer::threadMain, this, movie, std::ref(receiver)) // last: every other member exists when the thread starts
 {
 
 }

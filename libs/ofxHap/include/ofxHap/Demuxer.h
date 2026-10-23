@@ -80,12 +80,17 @@ namespace ofxHap {
         };
         int64_t                 _lastRead;
         int64_t                 _lastSeek;
-        std::thread             _thread;
         std::condition_variable _condition;
         mutable std::mutex      _lock;
         bool                    _finish;
         std::queue<Action>      _actions;
         bool                    _active;
+        // Declared LAST: members are constructed in declaration order, and the thread
+        // starts in _thread's constructor. Declared before _lock/_condition/_finish/_actions,
+        // threadMain could lock a mutex not yet constructed (std::system_error "mutex lock
+        // failed: Invalid argument", SIGABRT) or read the uninitialized queue (heap
+        // corruption, later SIGSEGV). Seen under load.
+        std::thread             _thread;
     };
 }
 
